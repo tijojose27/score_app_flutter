@@ -16,12 +16,9 @@ void main() {
                 image: AssetImage("images/background.jpg"), fit: BoxFit.cover)),
         child: Row(
           children: <Widget>[
-            Expanded(child: ScoreApp()),
+            Expanded(child: ScoreApp(score1, 'Team 1')),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[Score1Button(), Foul1Button()],
-              ),
+              child: ScoreApp(score2, "Team 2"),
             ),
           ],
         ),
@@ -31,6 +28,11 @@ void main() {
 }
 
 class ScoreApp extends StatefulWidget {
+  String teamtextView;
+  int score;
+
+  ScoreApp(this.score, this.teamtextView);
+
   @override
   State<StatefulWidget> createState() {
     return _ScoreApp();
@@ -43,10 +45,10 @@ class _ScoreApp extends State<ScoreApp> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Team1TextView(),
+        TeamTextView(widget.teamtextView),
         Padding(
             padding: EdgeInsets.only(bottom: 10.0),
-            child: Text("${score1}",
+            child: Text("${widget.score}",
                 style: TextStyle(
                     fontSize: 30.0,
                     fontWeight: FontWeight.bold,
@@ -59,7 +61,7 @@ class _ScoreApp extends State<ScoreApp> {
                 child: RaisedButton(
                   onPressed: () {
                     setState(() {
-                      score1++;
+                      widget.score++;
                     });
                   },
                   color: Colors.lightBlue,
@@ -83,8 +85,8 @@ class _ScoreApp extends State<ScoreApp> {
                 child: RaisedButton(
                   onPressed: () {
                     setState(() {
-                      if (score1 - 1 >= 0) {
-                        score1--;
+                      if (widget.score - 1 >= 0) {
+                        widget.score--;
                       }
                     });
                   },
@@ -106,80 +108,17 @@ class _ScoreApp extends State<ScoreApp> {
   }
 }
 
-class Score1Button extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Container(
-            width: 230.0,
-            height: 50.0,
-            child: RaisedButton(
-              onPressed: () {
-                score1--;
-              },
-              color: Colors.lightBlue,
-              elevation: 6.0,
-              splashColor: Colors.blueGrey,
-              shape: new RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              child: Text(
-                "Score",
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            )));
-  }
-}
+class TeamTextView extends StatelessWidget {
+  String teamName;
 
-class Foul1Button extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Container(
-            width: 230.0,
-            height: 50.0,
-            child: RaisedButton(
-              onPressed: () {},
-              color: Colors.red,
-              elevation: 6.0,
-              splashColor: Colors.blueGrey,
-              shape: new RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              child: Text(
-                "Foul",
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            )));
-  }
-}
+  TeamTextView(this.teamName);
 
-class ScoreTextView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(bottom: 10.0),
-        child: Text(
-          "0",
-          style: TextStyle(
-              fontSize: 30.0, fontWeight: FontWeight.bold, color: Colors.white),
-        ));
-  }
-}
-
-class Team1TextView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(bottom: 20.0),
         child: Text(
-          "Team 1",
+          teamName,
           style: TextStyle(
               fontSize: 30.0, fontWeight: FontWeight.bold, color: Colors.white),
         ));
