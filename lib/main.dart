@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 int score1 = 0;
 int score2 = 0;
 
-var team1Widget = ScoreApp( "Team 1", 1);
-var team2Widget = ScoreApp("Team 2", 2);
-
 void main() {
   runApp(MaterialApp(
     title: ("Score App"),
@@ -18,16 +15,7 @@ void main() {
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("images/background.jpg"), fit: BoxFit.cover)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(children: <Widget>[
-              Expanded(child: team1Widget),
-              Expanded(child: team2Widget),
-            ]),
-            ResetBtn()
-          ],
-        ),
+        child: ScoreApp()
       ),
     ),
   ));
@@ -38,13 +26,6 @@ void main() {
 ////////////////////////////////////////////////////////////////////////////////
 
 class ScoreApp extends StatefulWidget {
-  String teamtextView;
-  int team;
-
-  ScoreApp(this.teamtextView, this.team);
-
-  static _ScoreApp of(BuildContext context) =>
-      context.ancestorStateOfType(const TypeMatcher<_ScoreApp>());
 
   @override
   State<StatefulWidget> createState() {
@@ -54,108 +35,16 @@ class ScoreApp extends StatefulWidget {
 
 class _ScoreApp extends State<ScoreApp> {
 
-  
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TeamTextView(widget.teamtextView),
-        Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: ScoreTextView(widget.team)
-        ),
-        Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Container(
-                width: 230.0,
-                height: 50.0,
-                child: RaisedButton(
-                  onPressed: () {
-                    setState(() {
-                      increment(getScore(widget.team), widget.team);
-                    });
-                  },
-                  color: Colors.green,
-                  elevation: 6.0,
-                  splashColor: Colors.blueGrey,
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  child: Text(
-                    "Score",
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ))),
-        Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Container(
-                width: 230.0,
-                height: 50.0,
-                child: RaisedButton(
-                  onPressed: () {
-                    setState(() {
-                     decrement(getScore(widget.team), widget.team);
-                    });
-                  },
-                  color: Colors.red,
-                  elevation: 6.0,
-                  splashColor: Colors.blueGrey,
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  child: Text(
-                    "Foul",
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ))),
-      ],
-    );
-  }
-}
-
-class ScoreTextView extends StatelessWidget{
-
-  int team;
-
-  ScoreTextView(this.team);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildScoreView(int team) {
     return Text("${getScore(team)}",
         style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             color: Colors.white));
   }
-}
 
-class TeamTextView extends StatelessWidget {
-  String teamName;
-
-  TeamTextView(this.teamName);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: Text(
-          teamName,
-          style: TextStyle(
-              fontSize: 30.0, fontWeight: FontWeight.bold, color: Colors.white),
-        ));
-  }
-}
-
-class ResetBtn extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildScoreBtn(int team){
     return Padding(
         padding: EdgeInsets.all(10.0),
         child: Container(
@@ -163,8 +52,64 @@ class ResetBtn extends StatelessWidget {
             height: 50.0,
             child: RaisedButton(
               onPressed: () {
-                score1 = 0;
-                score2 = 0;
+                setState(() {
+                  increment(getScore(team), team);
+                });
+              },
+              color: Colors.green,
+              elevation: 6.0,
+              splashColor: Colors.blueGrey,
+              shape: new RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              child: Text(
+                "Score",
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            )));
+  }
+
+  Widget buildFoulBtn(int team){
+    return Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Container(
+            width: 230.0,
+            height: 50.0,
+            child: RaisedButton(
+              onPressed: () {
+                setState(() {
+                  decrement(getScore(team), team);
+                });
+              },
+              color: Colors.red,
+              elevation: 6.0,
+              splashColor: Colors.blueGrey,
+              shape: new RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              child: Text(
+                "Foul",
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            )));
+  }
+
+  Widget buildResetBtn(){
+    return Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Container(
+            width: 230.0,
+            height: 50.0,
+            child: RaisedButton(
+              onPressed: () {
+                setState(() {
+                  score1=0;
+                  score2=0;
+                });
               },
               color: Colors.blue,
               elevation: 6.0,
@@ -180,7 +125,56 @@ class ResetBtn extends StatelessWidget {
               ),
             )));
   }
+
+  Widget buildTeamName(String teamName){
+    return Padding(
+        padding: EdgeInsets.only(bottom: 20.0),
+        child: Text(
+          teamName,
+          style: TextStyle(
+              fontSize: 30.0, fontWeight: FontWeight.bold, color: Colors.white),
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Row(children: <Widget>[
+          Expanded(child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              buildTeamName("Team 1"),
+              Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                  child: buildScoreView(1)
+              ),
+              buildScoreBtn(1),
+              buildFoulBtn(1)
+            ],
+          )),
+          Expanded(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              buildTeamName("Team 2"),
+              Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: buildScoreView(2),
+              ),
+              buildScoreBtn(2),
+              buildFoulBtn(2)
+            ],
+          ),)
+        ]),
+        buildResetBtn()
+      ],
+    );
+  }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //WIDGETS END HERE
